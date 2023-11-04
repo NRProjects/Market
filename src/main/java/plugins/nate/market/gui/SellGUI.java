@@ -14,6 +14,7 @@ import java.util.stream.IntStream;
 public class SellGUI implements CustomGUI {
     private final ConfigurationSection categoriesConfig;
 
+
     public SellGUI(ConfigurationSection categoriesConfig) {
         this.categoriesConfig = categoriesConfig;
     }

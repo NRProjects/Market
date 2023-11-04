@@ -12,6 +12,7 @@ public class ConfigUtil {
     private FileConfiguration buyConfig;
     private FileConfiguration sellConfig;
 
+
     public ConfigUtil(Market plugin) {
         this.plugin = plugin;
         loadBuyConfig();

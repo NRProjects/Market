@@ -27,7 +27,6 @@ public class MarketListener implements Listener {
     GUIManager guiManager = GUIManager.getInstance();
 
 
-
     public MarketListener() {
         restrictedTitles.add("Market");
         restrictedTitles.add("Buy");
@@ -79,7 +78,6 @@ public class MarketListener implements Listener {
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-
 
         if (guiManager.getHistory(event.getPlayer()).size() > 1) {
             guiManager.clearHistory(player);
