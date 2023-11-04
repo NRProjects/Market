@@ -1,0 +1,15 @@
+categories:
+  building_blocks:
+    title: "Building Blocks"
+    description: "Blocks used for construction."
+    blocks:
+      - STONE
+      - DIRT
+      - COBBLESTONE
+  decoration_blocks:
+    title: "Decoration Blocks"
+    description: "Blocks for decoration."
+    blocks:
+      - OAK_PLANKS
+      - BEDROCK
+      - BOOKSHELF

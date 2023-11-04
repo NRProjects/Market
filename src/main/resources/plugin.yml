@@ -1,0 +1,9 @@
+name: Market
+version: '${version}'
+main: plugins.nate.market.Market
+api-version: '1.20'
+
+commands:
+  market:
+    description: "Opens the market GUI"
+    usage: /<command>
