@@ -1,5 +1,6 @@
 package plugins.nate.market.utils;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import plugins.nate.market.Market;
@@ -47,7 +48,7 @@ public class ConfigUtil {
     }
 
     public void saveSellConfig() {
-        File sellConfigFile = new File(plugin.getDataFolder(), "sell_categories.yml");
+        File sellConfigFile = new File(plugin.getDataFolder(), "sell_config.yml");
         try {
             sellConfig.save(sellConfigFile);
         } catch (IOException e) {
@@ -61,5 +62,28 @@ public class ConfigUtil {
 
     public FileConfiguration getSellConfig() {
         return sellConfig;
+    }
+
+    public ConfigurationSection getConfig(String fileName, String sectionKey) {
+        FileConfiguration config = null;
+
+        if ("buy_config.yml".equalsIgnoreCase(fileName)) {
+            config = getBuyConfig();
+        } else if ("sell_config.yml".equalsIgnoreCase(fileName)) {
+            config = getSellConfig();
+        }
+
+        if (config != null) {
+            ConfigurationSection section = config.getConfigurationSection(sectionKey);
+            if (section == null) {
+                // Log or handle the error that the section does not exist
+                plugin.getLogger().severe("Section " + sectionKey + " does not exist in " + fileName);
+            }
+            return section;
+        } else {
+            // Log or handle the error that the config file is unknown
+            plugin.getLogger().severe("Config file " + fileName + " is not recognized.");
+            return null;
+        }
     }
 }

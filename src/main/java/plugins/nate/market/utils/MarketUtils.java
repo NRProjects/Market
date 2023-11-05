@@ -7,5 +7,11 @@ public class MarketUtils {
     public static void log(String log) {
         Market.getPlugin().getLogger().info(log);
     }
+    public static void warn(String log) {
+        Market.getPlugin().getLogger().warning(log);
+    }
+    public static void severe(String log) {
+        Market.getPlugin().getLogger().severe(log);
+    }
 
 }

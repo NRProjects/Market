@@ -1,6 +1,9 @@
 package plugins.nate.market.managers;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import plugins.nate.market.events.MarketNavigateEvent;
 import plugins.nate.market.interfaces.CustomGUI;
 
 import java.util.*;
@@ -12,26 +15,43 @@ public class GUIManager {
 
     private GUIManager() {}
 
-    public void openGUI(Player player, CustomGUI gui) {
-        List<CustomGUI> guiList = guiMap.computeIfAbsent(player, l -> new ArrayList<>());
+    public void navigateTo(Player player, CustomGUI gui) {
+        Inventory fromInventory = null;
+        Inventory newInventory = gui.createGUI();
+
+        List<CustomGUI> guiList = guiMap.computeIfAbsent(player, k -> new ArrayList<>());
+
+        if (!guiList.isEmpty()) {
+            CustomGUI currentGUI = guiList.get(guiList.size() - 1);
+            fromInventory = currentGUI.createGUI();
+        }
+
         guiList.add(gui);
-        player.openInventory(gui.createGUI());
+
+        MarketNavigateEvent event = new MarketNavigateEvent(player, fromInventory, newInventory);
+        Bukkit.getServer().getPluginManager().callEvent(event);
+
+        player.openInventory(newInventory);
     }
 
-    public void goBack(Player player) {
+    public void navigateBack(Player player) {
         List<CustomGUI> guiList = guiMap.get(player);
 
-        if (guiList == null || guiList.isEmpty()) {
+        if (guiList == null || guiList.size() <= 1) {
+            player.closeInventory();
+            guiMap.remove(player);
             return;
         }
 
-        guiList.remove(guiList.size() - 1);
+        Inventory currentInventory = guiList.remove(guiList.size() - 1).createGUI();
 
-        if (!guiList.isEmpty()) {
-            player.openInventory(guiList.get(guiList.size() - 1).createGUI());
-        } else {
-            player.closeInventory();
-        }
+        CustomGUI previousGUI = guiList.get(guiList.size() - 1);
+        Inventory previousInventory = previousGUI.createGUI();
+
+        MarketNavigateEvent event = new MarketNavigateEvent(player, currentInventory, previousInventory);
+        Bukkit.getServer().getPluginManager().callEvent(event);
+
+        player.openInventory(previousInventory);
     }
 
     public static GUIManager getInstance() {
@@ -47,6 +67,17 @@ public class GUIManager {
         if (guiList != null) {
             guiMap.remove(player);
         }
-
     }
+//
+//    private Inventory getCurrentInventory(Player player) {
+//        return player.getOpenInventory().getTopInventory();
+//    }
+//
+//    public CustomGUI getCurrentGUI(Player player) {
+//        List<CustomGUI> guis = guiMap.get(player);
+//        if (guis != null && !guis.isEmpty()) {
+//            return guis.get(guis.size() - 1);
+//        }
+//        return null;
+//    }
 }
